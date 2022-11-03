@@ -1,0 +1,127 @@
+name: Build payloads
+
+run-name: ${{ github.actor }} is building payloads for AWS Lambda
+
+on:
+  pull_request:
+    branches: master
+  push:
+    branches: master
+
+jobs:
+  build-go-x86_64:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/go
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Install dependencies
+        run: go install golang.org/x/lint/golint
+
+      - name: Run build
+        run: go build -ldflags="-s -w" -o main cmd/main.go
+        env:
+          GOARCH: amd64
+          GOOS: linux
+          CGO_ENABLED: 0
+
+      - name: Run vet & lint
+        run: |
+          go vet cmd/main.go
+          golint cmd/main.go
+
+      - name: Run UPX
+        uses: crazy-max/ghaction-upx@v2
+        with:
+          version: latest
+          files: |
+            ./main
+          args: --best --lzma
+
+      - name: Package payload
+        run: zip lambda_payload_go.1x_x86_64.zip main
+
+      - name: Upload payload for build-go-x86_64
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-go-x86_64
+          path: lambda_payload_go.1x_x86_64.zip
+
+  build-go-arm64:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/go
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Install dependencies
+        run: go install golang.org/x/lint/golint
+
+      - name: Run build
+        run: go build -ldflags="-s -w" -o bootstrap cmd/main.go
+        env:
+          GOARCH: arm64
+          GOOS: linux
+          CGO_ENABLED: 0
+
+      - name: Run vet & lint
+        run: |
+          go vet cmd/main.go
+          golint cmd/main.go
+
+      - name: Run UPX
+        uses: crazy-max/ghaction-upx@v2
+        with:
+          version: latest
+          files: |
+            ./bootstrap
+          args: --best --lzma
+
+      - name: Package payload
+        run: zip lambda_payload_go.1x_arm64.zip bootstrap
+
+      - name: Upload payload for build-go-arm64
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-go-arm64
+          path: lambda_payload_go.1x_arm64.zip
+
+  release:
+    runs-on: ubuntu-latest
+    # if: startsWith(github.ref, 'refs/tags/')
+    needs: [build-go-x86_64, build-go-arm64]
+
+    steps:
+      - name: Download payload from build-go-x86_64
+        uses: actions/download-artifact@v3
+        with:
+          name: build-go-x86_64
+          path: lambda_payload_go.1x_x86_64.zip
+
+      - name: Download payload from build-go-arm64
+        uses: actions/download-artifact@v3
+        with:
+          name: build-go-arm64
+          path: lambda_payload_go.1x_arm64.zip
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            lambda_payload_go.1x_x86_64.zip
+            lambda_payload_go.1x_arm64.zip
