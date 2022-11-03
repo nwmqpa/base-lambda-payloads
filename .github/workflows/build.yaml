@@ -49,13 +49,13 @@ jobs:
           args: --best --lzma
 
       - name: Package payload
-        run: zip lambda_payload_go.1x_x86_64.zip main
+        run: zip lambda_payload_go1.x_x86_64.zip main
 
       - name: Upload payload for build-go-x86_64
         uses: actions/upload-artifact@v3
         with:
           name: build-go-x86_64
-          path: src/go/lambda_payload_go.1x_x86_64.zip
+          path: src/go/lambda_payload_go1.x_x86_64.zip
 
   build-go-arm64:
     runs-on: ubuntu-latest
@@ -95,13 +95,13 @@ jobs:
           args: --best --lzma
 
       - name: Package payload
-        run: zip lambda_payload_go.1x_arm64.zip bootstrap
+        run: zip lambda_payload_go1.x_arm64.zip bootstrap
 
       - name: Upload payload for build-go-arm64
         uses: actions/upload-artifact@v3
         with:
           name: build-go-arm64
-          path: src/go/lambda_payload_go.1x_arm64.zip
+          path: src/go/lambda_payload_go1.x_arm64.zip
 
   release:
     runs-on: ubuntu-latest
@@ -112,13 +112,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-go-x86_64
-          path: lambda_payload_go.1x_x86_64.zip
+          path: lambda_payload_go1.x_x86_64.zip
 
       - name: Download payload from build-go-arm64
         uses: actions/download-artifact@v3
         with:
           name: build-go-arm64
-          path: lambda_payload_go.1x_arm64.zip
+          path: lambda_payload_go1.x_arm64.zip
 
       - name: Release
         if: startsWith(github.ref, 'refs/tags/')
