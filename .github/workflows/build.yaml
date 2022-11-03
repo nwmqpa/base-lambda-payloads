@@ -43,7 +43,7 @@ jobs:
         with:
           version: latest
           files: |
-            ./main
+            ./src/go/main
           args: --best --lzma
 
       - name: Package payload
@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-go-x86_64
-          path: lambda_payload_go.1x_x86_64.zip
+          path: src/go/lambda_payload_go.1x_x86_64.zip
 
   build-go-arm64:
     runs-on: ubuntu-latest
@@ -89,7 +89,7 @@ jobs:
         with:
           version: latest
           files: |
-            ./bootstrap
+            ./src/go/bootstrap
           args: --best --lzma
 
       - name: Package payload
@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-go-arm64
-          path: lambda_payload_go.1x_arm64.zip
+          path: src/go/lambda_payload_go.1x_arm64.zip
 
   release:
     runs-on: ubuntu-latest
