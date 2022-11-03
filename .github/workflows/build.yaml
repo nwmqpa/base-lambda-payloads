@@ -4,9 +4,9 @@ run-name: ${{ github.actor }} is building payloads for AWS Lambda
 
 on:
   pull_request:
-    branches: master
+    branches: main
   push:
-    branches: master
+    branches: main
 
 jobs:
   build-go-x86_64:
