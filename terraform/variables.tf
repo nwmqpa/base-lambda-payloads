@@ -25,7 +25,7 @@ variable "package_repository" {
   }
 }
 
-variable "version" {
+variable "packages_version" {
   type        = string
   description = "Version used in the package_repository. Use \"latest\" for the latest release"
   default     = "latest"

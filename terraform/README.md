@@ -11,6 +11,6 @@ module "lambda_base_source" {
     runtime            = "..." // Required
     architecture       = "..." // Defaults to x86_64
     package_repository = "..." // Defaults to nwmqpa/base-lambda-payloads
-    version            = "..." // Defaults to latest
+    packages_version   = "..." // Defaults to latest
 }
 ```

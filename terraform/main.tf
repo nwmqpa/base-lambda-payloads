@@ -1,6 +1,6 @@
 locals {
   tag_url   = "https://api.github.com/repos/${var.package_repository}/tags"
-  files_url = var.version == "latest" ? "https://github.com/${var.package_repository}/releases/latest/download/lambda_payload_${var.runtime}_${var.architecture}.zip" : "https://github.com/${var.package_repository}/releases/download/${var.version}/lambda_payload_${var.runtime}_${var.architecture}.zip"
+  files_url = var.packages_version == "latest" ? "https://github.com/${var.package_repository}/releases/latest/download/lambda_payload_${var.runtime}_${var.architecture}.zip" : "https://github.com/${var.package_repository}/releases/download/${var.version}/lambda_payload_${var.runtime}_${var.architecture}.zip"
 }
 
 data "http" "this" {
@@ -9,7 +9,7 @@ data "http" "this" {
 
 resource "null_resource" "this" {
   triggers = {
-    latest_tag = lookup(element(jsondecode(data.http.this.response_body), 0), "name", var.version)
+    latest_tag = lookup(element(jsondecode(data.http.this.response_body), 0), "name", var.packages_version)
   }
 
   provisioner "local-exec" {
