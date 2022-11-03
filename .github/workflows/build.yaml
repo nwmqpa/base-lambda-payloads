@@ -120,15 +120,10 @@ jobs:
           name: build-go-arm64
           path: lambda_payload_go.1x_arm64.zip
 
-      - name: List all files
-        run: ls -lRa
-
       - name: Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
           fail_on_unmatched_files: true
-
           files: |
-            lambda_payload_go.1x_x86_64.zip
-            lambda_payload_go.1x_arm64.zip
+            lambda_payload_*/*.zip
