@@ -9,7 +9,7 @@ data "http" "this" {
 
 resource "null_resource" "this" {
   triggers = {
-    always_run = timestamp()
+    latest_tag = lookup(element(jsondecode(data.http.last_release_version.response_body), 0), "name", "v0.0.0")
   }
 
   provisioner "local-exec" {
