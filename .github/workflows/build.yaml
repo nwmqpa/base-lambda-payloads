@@ -69,7 +69,7 @@ jobs:
   build-nodejs:
     strategy:
       matrix:
-        nodejs: [12, 14, 16]
+        nodejs: [12, 14, 16, 18]
         architecture: [x86_64, arm64]
     name: Building NodeJs ${{ matrix.nodejs }} (${{ matrix.architecture }})
     runs-on: ubuntu-latest
