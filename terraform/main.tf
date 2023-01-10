@@ -9,7 +9,4 @@ data "http" "this" {
 
 data "local_file" "this" {
   filename = "${path.module}/../payloads/lambda_payload_${var.runtime}_${var.architecture}.zip"
-  depends_on = [
-    null_resource.this
-  ]
 }
