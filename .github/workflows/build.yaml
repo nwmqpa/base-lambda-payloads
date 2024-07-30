@@ -14,7 +14,7 @@ jobs:
   build-go:
     strategy:
       matrix:
-        go: [1.18]
+        go: [1.22]
         architecture: [x86_64, arm64]
     name: Building Go ${{ matrix.go }} (${{ matrix.architecture }})
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
   build-nodejs:
     strategy:
       matrix:
-        nodejs: [12, 14, 16, 18]
+        nodejs: [16, 18, 20]
         architecture: [x86_64, arm64]
     name: Building NodeJs ${{ matrix.nodejs }} (${{ matrix.architecture }})
     runs-on: ubuntu-latest
